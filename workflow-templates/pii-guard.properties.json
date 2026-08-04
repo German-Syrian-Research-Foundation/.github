@@ -1,0 +1,6 @@
+{
+  "name": "DSFG — Personal data guard (GDPR)",
+  "description": "Fails a pull request that adds data exports, secret files, or lines that look like personal data. Recommended for every DSFG repository.",
+  "iconName": "octicon shield-check",
+  "categories": ["Security", "Compliance"]
+}
