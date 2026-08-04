@@ -1,0 +1,67 @@
+name: 💡 Idea or improvement
+description: Propose something new or a change to how something works
+title: "[Idea]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Good ideas start with a clear problem. Tell us what is hard today before telling us the solution.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Who is affected, and how?
+      placeholder: Volunteers manually copy workshop attendance into three places, which takes an hour per event and causes errors.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What do you propose?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What alternatives did you consider?
+      description: Including "do nothing" and any existing tool that nearly does this.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area does this belong to?
+      options:
+        - Website / web content
+        - Brand and design assets
+        - Documents, templates, translation
+        - Data, tools, or automation
+        - Events (ASSG, SAFIERR, workshops)
+        - Organisation / process
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: help
+    attributes:
+      label: Can you help build it?
+      options:
+        - "Yes, I can implement this"
+        - "Yes, I can help but need guidance"
+        - "No, I am only suggesting it"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: This proposal does not require storing personal data in a GitHub repository
+          required: true

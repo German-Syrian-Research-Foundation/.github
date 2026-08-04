@@ -1,0 +1,76 @@
+name: 🐛 Bug or broken content
+description: Something is broken, wrong, or out of date
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please do **not** include personal data (names, emails, CVs, application details) — issues are public and permanent.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What is wrong?
+      description: A clear description of the problem.
+      placeholder: The scholarship deadline on the AES page still shows 2025.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can we see the problem ourselves?
+      value: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See the problem
+    validations:
+      required: false
+
+  - type: input
+    id: location
+    attributes:
+      label: Where?
+      description: URL, file path, or page name.
+      placeholder: https://ds-fg.com/service/aes/
+    validations:
+      required: false
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: How serious is it?
+      options:
+        - Cosmetic — looks wrong but works
+        - Minor — annoying, there is a workaround
+        - Major — a feature or page does not work
+        - Critical — wrong information is being published to applicants
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Screenshots or extra context
+      description: Blur or crop out any personal data before uploading.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: This report contains no personal data and no credentials
+          required: true
+        - label: This is not a security vulnerability (those go to github@ds-fg.com)
+          required: true
