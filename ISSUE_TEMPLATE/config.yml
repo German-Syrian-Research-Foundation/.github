@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🎓 Questions about scholarships, mentoring or membership
+    url: https://ds-fg.com/
+    about: GitHub is for our technical and open material only. Programme questions belong on our website or at info@ds-fg.com.
+  - name: 💬 DSFG Community
+    url: https://community.ds-fg.com/login
+    about: Peer support and discussion for members and scholars.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/German-Syrian-Research-Foundation/.github/blob/main/SECURITY.md
+    about: Never report security issues publicly. Use private vulnerability reporting or github@ds-fg.com.
+  - name: 🤝 Report a Code of Conduct concern
+    url: https://github.com/German-Syrian-Research-Foundation/.github/blob/main/CODE_OF_CONDUCT.md
+    about: Contact info@ds-fg.com. Reports are handled privately by the board.
