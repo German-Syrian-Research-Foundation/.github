@@ -1,0 +1,72 @@
+# DSFG — Personal data guard (GDPR / DSGVO)
+# A blunt but effective tripwire: fails the build if a pull request adds files
+# or patterns that commonly carry personal data. It is a safety net, not a
+# substitute for the rule in CONTRIBUTING.md — never commit personal data.
+name: Personal data guard
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  guard:
+    name: Check for personal data patterns
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine changed files
+        id: changed
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}"...HEAD > changed.txt
+          echo "--- changed files ---"; cat changed.txt
+
+      - name: Block risky file types
+        run: |
+          set -e
+          BAD=0
+          while IFS= read -r f; do
+            case "$f" in
+              *.csv|*.xlsx|*.xls|*.sav|*.dta|*.sqlite|*.db|*.mdb|*.vcf|*.ics)
+                echo "::error file=$f::Data/export file added. Confirm it contains no personal data, then add it to .pii-allow to override." ; BAD=1 ;;
+              *.env|*.pem|*.key|*.p12|*.pfx|*.jks|*.keystore)
+                echo "::error file=$f::Secret material must never be committed." ; BAD=1 ;;
+            esac
+          done < changed.txt
+          # allow-list support
+          if [ -f .pii-allow ]; then
+            echo "Allow-list present (.pii-allow) — review it during code review."
+          fi
+          exit $BAD
+
+      - name: Scan added lines for personal-data patterns
+        run: |
+          set +e
+          git diff -U0 "origin/${{ github.base_ref }}"...HEAD -- . \
+            | grep -E '^\+' | grep -vE '^\+\+\+' > added.txt
+
+          FAIL=0
+          check () {
+            PATTERN="$1"; LABEL="$2"
+            HITS=$(grep -inP "$PATTERN" added.txt | grep -viE 'example|sample|test|dummy|placeholder|noreply|your-?name|john\.doe|max\.mustermann' | head -20)
+            if [ -n "$HITS" ]; then
+              echo "::error::Possible $LABEL in added lines:"
+              echo "$HITS"
+              FAIL=1
+            fi
+          }
+
+          check '[A-Za-z0-9._%+-]+@(?!ds-fg\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}' "personal email address"
+          check '\bDE[0-9]{2}[ ]?([0-9]{4}[ ]?){4}[0-9]{2}\b' "German IBAN"
+          check '\b\+?[0-9]{2,3}[ -]?\(?0?[0-9]{2,5}\)?[ -]?[0-9]{4,9}\b.*(tel|phone|mobil|handy|whatsapp)' "phone number"
+          check '(passport|reisepass|aufenthaltstitel|residence permit|asyl|asylum|visa number|geburtsdatum|date of birth|dob)[^a-z]' "sensitive personal field"
+          check '(matrikelnummer|student ?id|applicant ?id)[^a-z]' "student identifier"
+
+          exit $FAIL
